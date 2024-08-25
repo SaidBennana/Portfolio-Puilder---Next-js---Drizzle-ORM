@@ -4,7 +4,7 @@ import { userInfo } from "@/utils/schema";
 import { useUser } from "@clerk/nextjs";
 import { eq } from "drizzle-orm";
 import React, { ReactNode, useEffect, useState } from "react";
-import { UserDetailsContext } from "../_context/UserDetailsContext";
+import { UserDetailsContext } from "../app/_context/UserDetailsContext";
 
 export default function Provider({ children }: { children: ReactNode }) {
   const { user } = useUser();
@@ -16,16 +16,24 @@ export default function Provider({ children }: { children: ReactNode }) {
 
   const GetUserDetalies = async () => {
     //API call to get user details
-    const result = await db
-      .select()
-      .from(userInfo)
-      .where(eq(userInfo.email, user?.primaryEmailAddress?.emailAddress!));
-    setUserDatiles([]);
-    if (result) setUserDatiles(result);
+
+    const result = await db.query.userInfo.findMany({
+      with: {
+        project: true,
+      },
+      where: eq(userInfo.email, user?.primaryEmailAddress?.emailAddress!),
+    });
+
+    // const result = await db
+    //   .select()
+    //   .from(userInfo)
+    //   .where(eq(userInfo.email, user?.primaryEmailAddress?.emailAddress!));
+    // setUserDatiles([]);
+    if (result) setUserDatiles(result[0]);
   };
   return (
     <UserDetailsContext.Provider value={{ userDatiles, setUserDatiles }}>
-      <div>{children}</div>;
+      <div>{children}</div>
     </UserDetailsContext.Provider>
   );
 }

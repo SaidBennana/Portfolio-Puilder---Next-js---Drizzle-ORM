@@ -38,7 +38,7 @@ export default function Sidebar() {
         );
       })}
       <div className="fixed bottom-5 px-5">
-        <UserButton/>
+        <UserButton />
       </div>
     </div>
   );

@@ -3,7 +3,9 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
 import { ToastContainer } from "react-toastify";
-import 'react-toastify/dist/ReactToastify.css';
+import "react-toastify/dist/ReactToastify.css";
+import Provider from "@/Components/Provider";
+import MobileProvider from "./Provider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -21,7 +23,11 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <div data-theme="dark">
-          <ClerkProvider>{children}</ClerkProvider>
+          <ClerkProvider>
+            <MobileProvider>
+              <Provider>{children}</Provider>
+            </MobileProvider>
+          </ClerkProvider>
           <ToastContainer />
         </div>
       </body>
